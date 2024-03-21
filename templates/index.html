@@ -1,0 +1,42 @@
+{% extends 'advisor_base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 col-lg-10 mx-lg-auto mx-md-auto">
+            <h3>{{ app_name }}</h3>
+            <h4>Advisors: {{ advisor_list }}</h4>
+            {{ wtf.quick_form(form) }}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Advisor</th>
+                        <th>Advice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.name }}</td>
+                        <td>{{ result.advice | safe }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>  
+</div>
+
+<!-- JavaScript code to set focus -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the input element by its id
+        var myInput = document.getElementById('question');
+
+        // Set focus on the input element
+        myInput.focus();
+    });
+</script>
+
+{% endblock %}
