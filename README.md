@@ -16,10 +16,12 @@ pip install -r requirements.txt
 
 ## Configuration
 
-* Get an API key from Mistral.ai.
+* Get an API key from [Mistral.ai](https://console.mistral.ai/)
 * Copy the sample.env file to .env and edit this file. 
 * Use your mistral API key in the API_KEY field.
 * Edit the advisors.json if you want different advisors
+* APP_NAME will change the name of the app
+* MODEL_NAME can be mistral-tiny (cheap to run), mistral-small, mistral-medium or mistral-large
 
 ## Running
 
