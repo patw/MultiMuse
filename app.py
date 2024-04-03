@@ -9,6 +9,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
+# Parallel calls to Mistral.ai
+from concurrent.futures import ThreadPoolExecutor
+
 # Basic python stuff
 import os
 import json
@@ -73,12 +76,13 @@ def index():
         form_result = request.form.to_dict(flat=True)
         q = form_result["question"]
 
-        for advisor in advisors:
-            name = advisor["name"]
-            system_message = advisor["role"]
-            raw_result = llm_mistral(q, system_message, 0.7)
-            formatted_result = misaka.html(raw_result)
-            results.append({"name": name, "advice": formatted_result})
+         # Create a ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            # Use executor.map to parallelize the llm_mistral function calls
+            for advisor, raw_result in zip(advisors, executor.map(llm_mistral, [q]*len(advisors), [advisor["role"] for advisor in advisors], [0.7]*len(advisors))):
+                name = advisor["name"]
+                formatted_result = misaka.html(raw_result)
+                results.append({"name": name, "advice": formatted_result})
     
     # Spit out the template
     return render_template('index.html', results=results, app_name=app_name, advisor_list=advisor_list, form=form)
